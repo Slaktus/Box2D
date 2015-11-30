@@ -260,6 +260,7 @@ inline void b2DynamicTree::RayCast(T* callback, const b2RayCastInput& input) con
 			subInput.p1 = input.p1;
 			subInput.p2 = input.p2;
 			subInput.maxFraction = maxFraction;
+			subInput.maskBits = input.maskBits;
 
 			float32 value = callback->RayCastCallback(subInput, nodeId);
 

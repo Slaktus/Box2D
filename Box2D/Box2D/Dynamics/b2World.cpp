@@ -1006,7 +1006,7 @@ struct b2WorldRayCastWrapper
 		{
 			float32 fraction = output.fraction;
 			b2Vec2 point = (1.0f - fraction) * input.p1 + fraction * input.p2;
-			return callback->ReportFixture(fixture, point, output.normal, fraction);
+			return callback->ReportFixture(fixture, point, output.normal, fraction, input.maskBits);
 		}
 
 		return input.maxFraction;
@@ -1025,6 +1025,20 @@ void b2World::RayCast(b2RayCastCallback* callback, const b2Vec2& point1, const b
 	input.maxFraction = 1.0f;
 	input.p1 = point1;
 	input.p2 = point2;
+	input.maskBits = 0x0001;
+	m_contactManager.m_broadPhase.RayCast(&wrapper, input);
+}
+
+void b2World::RayCast(b2RayCastCallback* callback, const b2Vec2& point1, const b2Vec2& point2, const uint16 maskBits) const
+{
+	b2WorldRayCastWrapper wrapper;
+	wrapper.broadPhase = &m_contactManager.m_broadPhase;
+	wrapper.callback = callback;
+	b2RayCastInput input;
+	input.maxFraction = 1.0f;
+	input.p1 = point1;
+	input.p2 = point2;
+	input.maskBits = maskBits;
 	m_contactManager.m_broadPhase.RayCast(&wrapper, input);
 }
 
